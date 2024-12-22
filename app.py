@@ -100,7 +100,7 @@ def analyze_image(image_file, context, prompt, client):
         
         # Make API request
         response = client.chat.completions.create(
-            model="gpt-4-vision-preview",  # Updated to use vision model
+            model="gpt-4o-mini-2024-07-18",  # Updated to use vision model
             messages=[
                 {
                     "role": "user",
@@ -137,7 +137,7 @@ def analyze_defect(defect_text, prompt, client):
     """
     try:
         response = client.chat.completions.create(
-            model="gpt-4-1106-preview",  # Updated to use latest GPT-4 model
+            model="gpt-4o-mini-2024-07-18",  # Updated to use latest GPT-4 model
             messages=[
                 {
                     "role": "user",
