@@ -1,5 +1,6 @@
 import streamlit as st
 import openai
+from openai import OpenAI
 import base64
 from PIL import Image
 import io
@@ -10,9 +11,8 @@ import logging
 #       Configuration         #
 # --------------------------- #
 
-# Initialize OpenAI configuration using Streamlit secrets
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-openai.api_base = "https://api.openai.com/v1"
+# Initialize OpenAI client using Streamlit secrets
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # Define AI Prompts as Constants
 IMAGE_ANALYSIS_PROMPT = (
@@ -69,7 +69,7 @@ def analyze_image(image_file, context, prompt):
         return f"Error processing image: {str(e)}"
     
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o-mini-2024-07-18",
             messages=[
                 {
@@ -87,8 +87,8 @@ def analyze_image(image_file, context, prompt):
             ],
             max_tokens=1000
         )
-        return response.choices[0].message['content']
-    except openai.error.OpenAIError as e:
+        return response.choices[0].message.content
+    except openai.APIError as e:
         logging.error(f"OpenAI API error: {e}")
         return f"OpenAI API error: {str(e)}"
     except Exception as e:
@@ -107,7 +107,7 @@ def analyze_defect(defect_text, prompt):
         str: The AI-generated detailed breakdown or an error message.
     """
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o-mini-2024-07-18",  # Using the latest GPT-4 model
             messages=[
                 {
@@ -117,8 +117,8 @@ def analyze_defect(defect_text, prompt):
             ],
             max_tokens=1000
         )
-        return response.choices[0].message['content']
-    except openai.error.OpenAIError as e:
+        return response.choices[0].message.content
+    except openai.APIError as e:
         logging.error(f"OpenAI API error: {e}")
         return f"OpenAI API error: {str(e)}"
     except Exception as e:
