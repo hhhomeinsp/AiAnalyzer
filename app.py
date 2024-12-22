@@ -12,7 +12,10 @@ import logging
 # --------------------------- #
 
 # Initialize OpenAI client using Streamlit secrets
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI(
+    api_key=st.secrets["OPENAI_API_KEY"],
+    base_url="https://api.openai.com/v1"
+)
 
 # Define AI Prompts as Constants
 IMAGE_ANALYSIS_PROMPT = (
@@ -70,7 +73,7 @@ def analyze_image(image_file, context, prompt):
     
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini-2024-07-18",
+            model="gpt-4o-mini-2024-07-18",  # Using GPT-4 Turbo with vision
             messages=[
                 {
                     "role": "user",
@@ -108,7 +111,7 @@ def analyze_defect(defect_text, prompt):
     """
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini-2024-07-18",  # Using the latest GPT-4 model
+            model="gpt-4o-mini-2024-07-18",  # Using GPT-4 Turbo
             messages=[
                 {
                     "role": "user",
