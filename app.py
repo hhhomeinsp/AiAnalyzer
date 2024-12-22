@@ -86,7 +86,7 @@ def analyze_image(image_file, context, prompt):
         return f"Error processing image: {str(e)}"
     
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o-mini-2024-07-18",
             messages=[
                 {
@@ -104,13 +104,10 @@ def analyze_image(image_file, context, prompt):
             ],
             max_tokens=1000
         )
-        return response.choices[0].message['content']
-    except openai.error.OpenAIError as e:
-        logging.error(f"OpenAI API error: {e}")
-        return f"OpenAI API error: {str(e)}"
+        return response.choices[0].message.content
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
-        return f"Unexpected error: {str(e)}"
+        logging.error(f"Error in analyze_image: {e}")
+        return f"Error: {str(e)}"
 
 def analyze_defect(defect_text, prompt):
     """
@@ -124,8 +121,8 @@ def analyze_defect(defect_text, prompt):
         str: The AI-generated detailed breakdown or an error message.
     """
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4o-mini-2024-07-18",  # Using the latest GPT-4 model
+        response = client.chat.completions.create(
+            model="gpt-4o-mini-2024-07-18",
             messages=[
                 {
                     "role": "user",
@@ -134,13 +131,10 @@ def analyze_defect(defect_text, prompt):
             ],
             max_tokens=1000
         )
-        return response.choices[0].message['content']
-    except openai.error.OpenAIError as e:
-        logging.error(f"OpenAI API error: {e}")
-        return f"OpenAI API error: {str(e)}"
+        return response.choices[0].message.content
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
-        return f"Unexpected error: {str(e)}"
+        logging.error(f"Error in analyze_defect: {e}")
+        return f"Error: {str(e)}"
 
 # --------------------------- #
 #         Streamlit UI        #
