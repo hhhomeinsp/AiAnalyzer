@@ -11,15 +11,25 @@ import logging
 #       Configuration         #
 # --------------------------- #
 
-# Initialize OpenAI client using Streamlit secrets
+# Get API key from environment or secrets
+try:
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
+except:
+    # Fallback to environment variable for local development
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+
+if not openai_api_key:
+    st.error("OpenAI API key is not configured")
+    st.stop()
+
+# Initialize OpenAI client
 client = OpenAI(
-    api_key=st.secrets["OPENAI_API_KEY"],
+    api_key=openai_api_key,
     base_url="https://api.openai.com/v1"
 )
 
-# Initialize OpenAI configuration
-openai.api_key = os.getenv("OPENAI_API_KEY")
-openai.api_base = "https://api.openai.com/v1"
+# Also set for older openai package usage
+openai.api_key = openai_api_key
 
 # Define AI Prompts as Constants
 IMAGE_ANALYSIS_PROMPT = (
